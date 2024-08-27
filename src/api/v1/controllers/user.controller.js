@@ -103,9 +103,10 @@ module.exports.getAllUsers = async (req, res) => {
       firstname: user.UserFirstName,
       email: user.UserEmail,
       gender: user.Gender,
-      role: user.role,
-      birthday: user.birthday,
+      role: user.Role,
+      birthday: user.Birthday,
     }));
+    console.log("role: user.role,", users);
 
     res.status(200).json({
       code: 200,
