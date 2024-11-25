@@ -26,7 +26,7 @@ const Users = {
       ]);
       return result;
     } catch (error) {
-      console.log("Error executing query:", error);
+      "Error executing query:", error;
       throw error;
     }
   },
@@ -42,7 +42,7 @@ const Users = {
 
       return result;
     } catch (error) {
-      console.log("Error executing query:", error);
+      "Error executing query:", error;
       throw error;
     }
   },
@@ -52,7 +52,7 @@ const Users = {
       const result = query(sql_getUser, [UserID]);
       return result;
     } catch (error) {
-      console.log("Error executing query:", error);
+      "Error executing query:", error;
       throw error;
     }
   },
@@ -79,7 +79,7 @@ const Users = {
       ]);
       return result;
     } catch (error) {
-      console.log("Error executing query:", error);
+      "Error executing query:", error;
       throw error;
     }
   },

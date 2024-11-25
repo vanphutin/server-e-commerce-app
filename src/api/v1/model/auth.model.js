@@ -10,10 +10,10 @@ const Auth = {
       "SELECT COUNT(*) AS count FROM users WHERE UserName = ?";
     try {
       const [rows] = await query(sql_check_username, [username]);
-      // console.log("[rows]", rows.count);
+      // ("[rows]", rows.count);
       return rows.count > 0;
     } catch (error) {
-      console.log("Error checking username existence:", error);
+      "Error checking username existence:", error;
       throw error;
     }
   },
@@ -67,7 +67,7 @@ const Auth = {
       ]);
       return result;
     } catch (error) {
-      console.log("Error executing query:", error);
+      "Error executing query:", error;
       throw error;
     }
   },
@@ -83,7 +83,7 @@ const Auth = {
       const [results] = await query(sql_email_pass, [UserEmail, UserPassword]);
       return results.count > 0;
     } catch (error) {
-      console.log("Error executing query:", error);
+      "Error executing query:", error;
       throw error;
     }
   },
@@ -92,10 +92,10 @@ const Auth = {
       "SELECT * FROM users WHERE UserEmail=? AND UserPassword=?";
     try {
       const result = await query(sql_login, [UserEmail, md5(UserPassword)]);
-      // console.log("result", result);
+      // ("result", result);
       return result.length > 0 ? result[0] : null;
     } catch (error) {
-      console.log("Lỗi khi thực hiện truy vấn:", error);
+      "Lỗi khi thực hiện truy vấn:", error;
       throw error; // Ném lỗi để controller hoặc route bắt được và xử lý
     }
   },
@@ -105,7 +105,7 @@ const Auth = {
       const result = await query(sql_veryToken, [UserEmail]);
       return result && result.length > 0 ? result[0] : null;
     } catch (error) {
-      console.log("Lỗi khi thực hiện truy vấn:", error);
+      "Lỗi khi thực hiện truy vấn:", error;
       throw error;
     }
   },

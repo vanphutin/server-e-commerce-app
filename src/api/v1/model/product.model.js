@@ -9,6 +9,7 @@ const Products = {
       SELECT p.*, c.CategoryName
       FROM products p
       JOIN productcategories c ON p.ProductCategoryID = c.CategoryID
+     
     `;
 
     // Handle Category filtering

@@ -60,7 +60,7 @@ module.exports.authRegister = async (req, res) => {
 module.exports.authLogin = async (req, res) => {
   try {
     const { UserEmail, UserPassword } = req.body;
-    // console.log("req.body", req.body);
+    // ("req.body", req.body);
     const loginAuth = await Auth.authLogin(UserEmail, UserPassword);
     if (!loginAuth) {
       return res.status(400).json({
@@ -147,10 +147,10 @@ module.exports.authVeryToken = async (req, res) => {
           .json({ message: "Failed to authenticate token" });
       }
 
-      // console.log("decoded.userId:", decoded);
+      // ("decoded.userId:", decoded);
       // Giả sử bạn có hàm này để lấy thông tin người dùng từ ID
       const loginAuth = await Auth.authVeryToken(decoded?.UserEmail);
-      // console.log("user:", loginAuth);
+      // ("user:", loginAuth);
 
       if (!loginAuth) {
         return res.status(404).json({ message: "User not found" });

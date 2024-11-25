@@ -51,7 +51,7 @@ module.exports.registerSeller = async (req, res) => {
       message: "Update user seller successful",
     });
   } catch (error) {
-    console.log("Error executing query:", error);
+    "Error executing query:", error;
     res.status(500).json({
       code: 500,
       message: "Internal server error",
@@ -72,7 +72,7 @@ module.exports.createProducts = async (req, res) => {
       UserID,
     } = req.body;
   } catch (error) {
-    console.log("Error executing query:", error);
+    "Error executing query:", error;
     res.status(500).json({
       code: 500,
       message: "Internal server error",
@@ -106,7 +106,6 @@ module.exports.getAllUsers = async (req, res) => {
       role: user.Role,
       birthday: user.Birthday,
     }));
-    console.log("role: user.role,", users);
 
     res.status(200).json({
       code: 200,
@@ -114,7 +113,7 @@ module.exports.getAllUsers = async (req, res) => {
       data: users, // Trả về danh sách người dùng
     });
   } catch (error) {
-    console.log("Error executing query:", error);
+    "Error executing query:", error;
     res.status(500).json({
       code: 500,
       message: "Internal server error",
@@ -157,7 +156,7 @@ module.exports.getUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("Error executing query:", error);
+    "Error executing query:", error;
     res.status(500).json({
       code: 500,
       message: "Internal server error",
@@ -210,7 +209,7 @@ module.exports.updateUsers = async (req, res) => {
       message: "Update user successful",
     });
   } catch (error) {
-    console.log("Error executing query:", error);
+    "Error executing query:", error;
     res.status(500).json({
       code: 500,
       message: "Internal server error",

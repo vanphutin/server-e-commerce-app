@@ -12,6 +12,7 @@ app.use(cookieParser());
 
 // CORS configuration
 const whitelist = [
+  "https://vpt-quiz-app.netlify.app",
   "https://vpt-e-commerce-app-9413c5e93166.herokuapp.com",
   "http://localhost:3000",
 ];
@@ -41,13 +42,11 @@ database.getConnection((error, connection) => {
     console.error("Error connecting to database:", error);
     return;
   }
-  console.log(
-    "Connected to MySQL database",
-    `host: ${database.config.connectionConfig.host}, port: ${database.config.connectionConfig.port}`
-  );
+  "Connected to MySQL database",
+    `host: ${database.config.connectionConfig.host}, port: ${database.config.connectionConfig.port}`;
   connection.release();
   app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+    `App listening on port ${port}`;
   });
 });
 
