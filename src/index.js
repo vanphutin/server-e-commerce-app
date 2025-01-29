@@ -12,7 +12,8 @@ app.use(cookieParser());
 
 // CORS configuration
 const whitelist = [
-  "https://vpt-quiz-app.netlify.app",
+  "https://vpt-e-commerce.netlify.app",
+  "https://ecommerce-vpt.netlify.app",
   "https://vpt-e-commerce-app-9413c5e93166.herokuapp.com",
   "http://localhost:3000",
 ];
@@ -36,17 +37,22 @@ app.use(express.urlencoded({ extended: true }));
 // APIs
 apiRoutersV1(app);
 
-// Database connection and server start
+// Connect to the database and start the server
 database.getConnection((error, connection) => {
   if (error) {
     console.error("Error connecting to database:", error);
-    return;
+    return process.exit(1); // Exit if there's a connection error
   }
-  "Connected to MySQL database",
-    `host: ${database.config.connectionConfig.host}, port: ${database.config.connectionConfig.port}`;
+
+  console.log(
+    `Connected to MySQL database || Host: ${database.config.connectionConfig.host}, Port: ${database.config.connectionConfig.port}`
+  );
+
   connection.release();
+
+  // Start the server
   app.listen(port, () => {
-    `App listening on port ${port}`;
+    console.log(`App listening on port ${port}`);
   });
 });
 
@@ -54,4 +60,10 @@ database.getConnection((error, connection) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
+});
+
+// fix lỗi get san phan
+
+app.get("/", (req, res) => {
+  res.send("Its working !");
 });

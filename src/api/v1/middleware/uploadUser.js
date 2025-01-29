@@ -1,37 +1,26 @@
 const multer = require("multer");
-const path = require("path");
 
-// Set storage engine
-const storage = multer.diskStorage({
-  destination: "./uploads/avatars", // Sửa đường dẫn đến thư mục uploads/avatars
-  filename: function (req, file, cb) {
-    const UserAvatar = req.body.UserAvatar || Date.now();
-    cb(null, UserAvatar + path.extname(file.originalname)); // Lưu ảnh với tên dựa trên ID sản phẩm
-  },
-});
+// Sử dụng memoryStorage để lưu file tạm trong bộ nhớ
+const storage = multer.memoryStorage();
 
-// Initialize upload variable
 const uploadUser = multer({
   storage: storage,
-  limits: { fileSize: 5000000 }, // 1MB
+  limits: { fileSize: 5000000 }, // Giới hạn dung lượng 5MB
   fileFilter: function (req, file, cb) {
     checkFileType(file, cb);
   },
-}).single("UserAvatar"); // "UserAvatar" là tên trường trong form
+}).single("UserAvatar");
 
-// Check file type
+// Hàm kiểm tra loại file
 function checkFileType(file, cb) {
-  // Allowed ext
-  const filetypes = /jpeg|webp|jpg|png|gif/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
+  const filetypes = /jpeg|jpg|webp|png|gif/;
+  const extname = filetypes.test(file.originalname.toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
   if (mimetype && extname) {
     return cb(null, true);
   } else {
-    cb("Error: Images Only!");
+    cb("Error: Only images are allowed!");
   }
 }
 

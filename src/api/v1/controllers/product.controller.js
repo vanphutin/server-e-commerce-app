@@ -1,7 +1,7 @@
 const Products = require("../model/product.model");
 const db = require("../../../config/database.config");
 const { v4: uuidv4 } = require("uuid");
-const fs = require("fs");
+const fs = require("fs").promises;
 const { promisify } = require("util");
 const query = promisify(db.query).bind(db);
 
@@ -26,19 +26,23 @@ module.exports.getAllProducts = async (req, res) => {
     }
 
     // Filter products based on role
-    const newProducts = allProducts.filter((product) => {
-      if (role == "administrator") {
-        return product.Deleted === 0 && product.status === 0;
-      } else {
-        return product.Deleted === 0 && product.status === 1;
-      }
-    });
-    console.log("newProducts", newProducts);
+    const filteredProducts = role
+      ? allProducts.filter((product) => {
+          if (role === "administrator") {
+            return product.Deleted === 0 && product.status === 0;
+          } else {
+            return product.Deleted === 0 && product.status === 1;
+          }
+        })
+      : allProducts;
+
+    // Shuffle products randomly
+    const randomProducts = filteredProducts.sort(() => Math.random() - 0.5);
 
     res.status(200).json({
       code: 200,
       message: "Get all products successful",
-      data: newProducts,
+      data: randomProducts,
     });
   } catch (error) {
     console.error("Error executing query:", error);
@@ -49,6 +53,7 @@ module.exports.getAllProducts = async (req, res) => {
   }
 };
 
+// Hàm tạo sản phẩm
 module.exports.createProducts = async (req, res) => {
   const ProductID = uuidv4();
   try {
@@ -62,34 +67,51 @@ module.exports.createProducts = async (req, res) => {
       UserID,
     } = req.body;
 
-    let ProductImage;
+    let ProductImageBase64 = null;
     if (req.file) {
-      ProductImage = req.file.path.replace(/\\/g, "/"); // Lưu đường dẫn ảnh
+      const filePath = req.file.path; // Đường dẫn file tạm thời
+      try {
+        // Chuyển file sang base64
+        const fileData = await fs.readFile(filePath);
+        ProductImageBase64 = `data:${
+          req.file.mimetype
+        };base64,${fileData.toString("base64")}`;
+        await fs.unlink(filePath); // Xóa file tạm
+      } catch (err) {
+        return res.status(500).json({
+          code: 500,
+          message: "Error reading file",
+        });
+      }
     }
 
-    if (
-      !ProductName ||
-      !ProductPrice ||
-      !ProductWeight ||
-      !ProductLongDesc ||
-      !ProductImage ||
-      !ProductCategoryID ||
-      !ProductStock ||
-      !UserID
-    ) {
-      return res.status(404).json({
-        code: 404,
-        message: "Missing required fields",
-      });
+    // Kiểm tra các trường cần thiết
+    const requiredFields = [
+      "ProductName",
+      "ProductPrice",
+      "ProductWeight",
+      "ProductLongDesc",
+      "ProductCategoryID",
+      "ProductStock",
+      "UserID",
+    ];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: `Missing required field: ${field}`,
+        });
+      }
     }
 
+    // Tạo sản phẩm
     const create = await Products.createProducts(
       ProductID,
       ProductName,
       ProductPrice,
       ProductWeight,
       ProductLongDesc,
-      ProductImage, // Lưu đường dẫn ảnh vào DB
+      ProductImageBase64, // Lưu base64
       ProductCategoryID,
       ProductStock,
       UserID
@@ -101,7 +123,7 @@ module.exports.createProducts = async (req, res) => {
       data: create,
     });
   } catch (error) {
-    "Error executing query:", error;
+    console.error("Error executing query:", error);
     res.status(500).json({
       code: 500,
       message: "Internal server error",
@@ -118,6 +140,7 @@ module.exports.getDetailProducts = async (req, res) => {
         message: "Product not found",
       });
     }
+
     res.status(200).json({
       code: 200,
       message: "Get product success",

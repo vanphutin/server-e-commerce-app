@@ -9,12 +9,12 @@ const Products = {
       SELECT p.*, c.CategoryName
       FROM products p
       JOIN productcategories c ON p.ProductCategoryID = c.CategoryID
-     
+      WHERE p.Deleted = 0
     `;
 
     // Handle Category filtering
     if (categories.length > 0) {
-      sql_product += ` WHERE c.CategoryName IN (${categories
+      sql_product += ` AND c.CategoryName IN (${categories
         .map(() => "?")
         .join(",")})`;
     }
@@ -33,8 +33,6 @@ const Products = {
       let skipPage = (page - 1) * PAGE_SIZE;
       sql_product += ` LIMIT ? OFFSET ?`;
       params = [...params, PAGE_SIZE, skipPage];
-    } else {
-      sql_product;
     }
 
     try {
